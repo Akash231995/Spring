@@ -3,11 +3,6 @@ package com.mvc.model;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-
-@Data
-@AllArgsConstructor
 public class Contact {
 	@Size(min = 2, max = 3, message = "Country Code Should in range 2 - 3")
 	private String countryCode;
