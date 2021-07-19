@@ -14,8 +14,7 @@ public class Contact {
 	@Pattern(regexp = "^\\d{10}$", message = "Invalid Contact Number")
 	private String number;
 
-	public Contact(@Size(min = 2, max = 3, message = "Country Code Should in range 2 - 3") String countryCode,
-			@Pattern(regexp = "^\\d{10}$", message = "Invalid Contact Number") String number) {
+	public Contact(String countryCode, String number) {
 		this.countryCode = countryCode;
 		this.number = number;
 	}
