@@ -1,9 +1,14 @@
 package com.mvc.repository;
 
+import java.sql.PreparedStatement;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import com.mvc.exception.InsertFailedException;
 import com.mvc.model.Contact;
 import com.mvc.model.Customer;
 
@@ -20,16 +25,35 @@ public class CustomerRepository {
 	}
 
 	public boolean register(Customer customer) {
-		jdbcTemplate.update("INSERT INTO CONTACT(?,?,?)",
-				new Object[] { customer.getContact().getCountryCode(), customer.getContact().getNumber() });
-		return false;
+		KeyHolder keyHolder = new GeneratedKeyHolder();
+		int contactInsertedCount = jdbcTemplate.update(connection -> {
+			PreparedStatement preparedStatement = connection
+					.prepareStatement("INSERT INTO CONTACT(contrycode,number) VALUES(?, ?)", new String[] { "id" });
+			preparedStatement.setString(1, customer.getContact().getCountryCode());
+			preparedStatement.setString(1, customer.getContact().getNumber());
+			return preparedStatement;
+		}, keyHolder);
+		if (contactInsertedCount == 0) {
+			throw new InsertFailedException("Contact Insertion Failed");
+		}
+		int customerInsertedCount = jdbcTemplate.update("INSERT INTO CUSTOMER(name,email,contactid) VALUES(?,?,?)",
+				new Object[] { customer.getName(), customer.getEmail(), keyHolder.getKey() });
+
+		if (customerInsertedCount == 0) {
+			throw new InsertFailedException("Contact Insertion Failed");
+		}
+		return true;
 	}
 
 	public boolean update(Customer customer) {
-		return false;
+		int customerUpdated = jdbcTemplate.update("UPDATE CUSTOMER SET name = ?, email = ? WHERE id = ?",
+				new Object[] { customer.getName(), customer.getEmail() });
+		return customerUpdated != 0;
 	}
 
 	public boolean delete(int id) {
+		int customerDeletedCount = jdbcTemplate.update("DELETE FROM CUSTOMER WHERE id = ?", new Object[] { id });
+		if(customerDeletedCount == 0) throw new InsertFailedException();
 		return false;
 	}
 

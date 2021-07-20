@@ -3,8 +3,10 @@ package com.mvc.service;
 import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.mvc.controller.CustomerController;
+import com.mvc.exception.InsertFailedException;
 import com.mvc.model.Customer;
 import com.mvc.repository.CustomerRepository;
 
@@ -21,6 +23,7 @@ public class CustomerService {
 		return customerRepository.get(id);
 	}
 
+	@Transactional(rollbackFor = InsertFailedException.class)
 	public boolean register(Customer customer) {
 		return customerRepository.register(customer);
 	}
