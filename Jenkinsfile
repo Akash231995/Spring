@@ -19,7 +19,7 @@ pipeline {
     }
     stage('Deploy') { 
             steps {
-                bat 'echo F | xcopy "target/SpringMVC.war" "F:/Software/jboss-eap/standalone/deployments/"'
+                bat "echo F | xcopy target/SpringMVC.war 'F:/Software/jboss-eap/standalone/deployments/SpringMVC.war'"
             }
         }
   }
