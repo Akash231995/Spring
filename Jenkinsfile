@@ -19,7 +19,7 @@ pipeline {
     }
     stage('Deploy') { 
             steps {
-                bat 'xcopy C:/Windows/System32/config/systemprofile/AppData/Local/Jenkins/.jenkins/workspace/demo-project/target/SpringMVC.war F:/Software/jboss-eap/standalone/deployments/SpringMVC.war'
+                bat 'xcopy target/SpringMVC.war F:/Software/jboss-eap/standalone/deployments/SpringMVC.war'
             }
         }
   }
